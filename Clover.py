@@ -1,8 +1,18 @@
+import csv
+
 def parse_flatfile(datafilename, formatfilename):
     output = {} #Dictionary output
     outputList = []
+    colNames = []
 
     with open(datafilename) as dataFile, open(formatfilename) as formatFile:
+        fileformat = csv.reader(formatFile)
+
+        for key in fileformat: #getting the column names in list to work with later.
+            if key[0] == 'column name':
+                continue
+            colNames.append(key[0])
+
         for dataLine in dataFile:
             dataLine = dataLine.split() #To seperate values I need to work with
 
@@ -10,9 +20,9 @@ def parse_flatfile(datafilename, formatfilename):
                 dataLine.append(dataLine[1][1:])
                 dataLine[1] = dataLine[1][:1]
 
-            output['name'] = dataLine[0]
-            output['valid'] = bool(dataLine[1])
-            output['count'] = int(dataLine[2])
+            output[colNames[0]] = dataLine[0]
+            output[colNames[1]] = bool(dataLine[1])
+            output[colNames[2]] = int(dataLine[2])
             outputList.append(output.copy()) #Create list of the key-value pairs.
 
 
